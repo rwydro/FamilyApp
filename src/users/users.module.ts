@@ -3,16 +3,23 @@ import {UsersService} from "./users.service";
 import {UsersController} from "./users.controller";
 import {CreateUserHandler} from "./handlers/create-user.handler";
 import {CqrsModule} from "@nestjs/cqrs";
-
-export const CommandHandlers = [CreateUserHandler]
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from './db/schemas/user.schema';
+import { GetUserHandler } from './handlers/get-users.handler';
 
 @Module({
-    imports: [CqrsModule],
     controllers: [UsersController],
-    providers: [UsersService, CreateUserHandler],
     exports: [
         UsersService,
-        CreateUserHandler
     ],
+    imports: [
+        CqrsModule,
+        MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    ],
+    providers: [
+        UsersService,
+        CreateUserHandler,
+        GetUserHandler
+    ]
 })
 export class UsersModule {}

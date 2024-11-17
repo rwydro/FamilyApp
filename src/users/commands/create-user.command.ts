@@ -8,5 +8,10 @@ export class CreateUserCommand {
 }
 
 export class CreateUserCommandResult {
-    constructor(){}
+    constructor(
+      public readonly userId: string,
+      public readonly name: string,
+      public readonly email: string,
+      public readonly description: string,
+    ){}
 }

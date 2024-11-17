@@ -1,16 +1,17 @@
 import {Injectable} from "@nestjs/common";
 import {CreateUserDto} from "./dtos";
-import {CommandBus} from "@nestjs/cqrs";
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {CreateUserCommand, CreateUserCommandResult} from "./commands/create-user.command";
+import { GetUsersQuery, GetUsersQueryResult } from './queries/get-users.query';
 
 @Injectable()
 export class UsersService {
 
-    constructor(private commandBus: CommandBus) {
+    constructor(private commandBus: CommandBus, private queryBus: QueryBus) {
     }
 
-    getHello(): string {
-        return 'GetUserASD';
+    async getUsers(): Promise<GetUsersQueryResult> {
+        return await this.queryBus.execute<GetUsersQuery, GetUsersQueryResult>(new GetUsersQuery());
     }
 
     async createUser(userData: CreateUserDto):  Promise<CreateUserCommandResult>  {
