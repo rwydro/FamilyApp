@@ -1,4 +1,4 @@
-import { User } from '../db/schemas/user.schema';
+import { User } from '../../db/schemas/user.schema';
 
 export class GetUsersQuery {}
 

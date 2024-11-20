@@ -1,21 +1,37 @@
 
 import { Injectable } from '@nestjs/common';
-import { CreateTasksDto, UpdateTasksDto } from './dtos';
-import { DbService } from './db/db.service';
+import { CreateTasksDto } from './dtos';
+import { CreateTaskCommand, CreateTaskCommandResult } from './commands/create-task.command';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Model, Types } from 'mongoose';
+import { GetAssignedTasksQuery, GetAssignedTasksQueryResult } from './queries/get-assigned-tasks.query';
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly dbService: DbService) {}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus
+  ) {}
 
-  create(createTasksDto: CreateTasksDto) {
-    return this.dbService.createTasks(createTasksDto);
+  async create(createTasksDto: CreateTasksDto): Promise<CreateTaskCommandResult> {
+    return await this.commandBus.execute<CreateTaskCommand, CreateTaskCommandResult>(new CreateTaskCommand(
+      createTasksDto.reporterUser,
+      createTasksDto.assignedUser,
+      createTasksDto.title,
+      createTasksDto.description,
+      createTasksDto.creationDate,
+      createTasksDto.deadline,
+      createTasksDto.taskStatus,
+    ));
   }
 
-  findAll() {
-    return this.dbService.findAllTasks();
+  findForAssigneeUser(assigneeUserId: Types.ObjectId) {
+    return this.queryBus.execute<GetAssignedTasksQuery, GetAssignedTasksQueryResult>(
+      new GetAssignedTasksQuery(assigneeUserId)
+    );
   }
-
-  update(id: string, updateTasksDto: UpdateTasksDto) {
-    return this.dbService.updateTasks(id, updateTasksDto);
-  }
+  //
+  // update(id: string, updateTasksDto: UpdateTasksDto) {
+  //   return this.dbService.updateTasks(id, updateTasksDto);
+  // }
 }

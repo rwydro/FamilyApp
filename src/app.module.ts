@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {UsersModule} from "./users/users.module";
 import {DevtoolsModule} from "@nestjs/devtools-integration";
 import { Connection } from 'mongoose';
+import { TasksModule } from './tasks/tasks.module';
+import { DbModule } from './db/db.module';
 
 @Module({
   imports: [
@@ -18,12 +20,13 @@ import { Connection } from 'mongoose';
             connection.on('disconnected', () => console.log('disconnected'));
             connection.on('reconnected', () => console.log('reconnected'));
             connection.on('disconnecting', () => console.log('disconnecting'));
-
             return connection;
           }
         }
       ),
     UsersModule,
+    TasksModule,
+    DbModule
   ]
 })
 export class AppModule {}

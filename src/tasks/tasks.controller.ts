@@ -1,19 +1,20 @@
 
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { CreateTasksDto, UpdateTasksDto } from './dtos';
+import { CreateTasksDto } from './dtos';
+import { CreateTaskCommandResult } from './commands/create-task.command';
 
-@Controller('taskss')
+@Controller('/tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Post('create')
-  create(@Body() createTasksDto: CreateTasksDto) {
-    return this.tasksService.create(createTasksDto);
+  @Post()
+  async create(@Body() createTasksDto: CreateTasksDto): Promise<CreateTaskCommandResult> {
+    return await this.tasksService.create(createTasksDto);
   }
 
-  @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  @Get('/:id')
+  async findForAssigneeUser(@Param() params: any) {
+    return await this.tasksService.findForAssigneeUser(params.id)
   }
 }
