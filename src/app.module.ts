@@ -6,11 +6,16 @@ import {DevtoolsModule} from "@nestjs/devtools-integration";
 import { Connection } from 'mongoose';
 import { TasksModule } from './tasks/tasks.module';
 import { DbModule } from './db/db.module';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     DevtoolsModule.register({
       http: process.env.NODE_ENV !== 'production',
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/familyDB',
       {
@@ -26,7 +31,8 @@ import { DbModule } from './db/db.module';
       ),
     UsersModule,
     TasksModule,
-    DbModule
+    DbModule,
+    AuthModule,
   ]
 })
 export class AppModule {}
