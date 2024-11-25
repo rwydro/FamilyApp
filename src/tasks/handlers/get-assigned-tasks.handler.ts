@@ -13,9 +13,9 @@ export class GetAssignedTasksHandler implements ICommandHandler<GetAssignedTasks
     @InjectModel(User.name) private userModel: Model<User>
   ) {}
 
-  async execute(command: GetAssignedTasksQuery): Promise<GetAssignedTasksQueryResult> {
-    const tasks = await this.taskModel.find({assignee: command.assigneeUserID}).populate('assignee reporter')
-    const user = await this.userModel.findOne({_id: command.assigneeUserID})
+  async execute(query: GetAssignedTasksQuery): Promise<GetAssignedTasksQueryResult> {
+    const tasks = await this.taskModel.find({assignee: query.assigneeUserID}).populate('assignee reporter')
+    const user = await this.userModel.findOne({_id: query.assigneeUserID})
     return new GetAssignedTasksQueryResult(
       user,
       tasks

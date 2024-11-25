@@ -1,7 +1,7 @@
 import { TaskStatus } from '../db/schemas/task.schema';
 import { Types } from 'mongoose';
 
-export class CreateTasksDto {
+export class CreateUpdateTasksDto {
   readonly reporterUser: Types.ObjectId
   readonly assignedUser: Types.ObjectId;
   readonly title: string;
@@ -9,5 +9,4 @@ export class CreateTasksDto {
   readonly creationDate: Date;
   readonly deadline: Date;
   readonly taskStatus: TaskStatus;
-  readonly taskId: string;
 }
